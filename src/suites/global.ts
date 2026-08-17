@@ -19,7 +19,7 @@ export function testHomepageLoads(options: HomepageOptions = {}): void {
   test('homepage loads', { tag: tags }, async ({ page }) => {
     const { pageResponse } = await loadPage(page, path);
 
-    expect(pageResponse, 'homepage should return a response').not.toBeNull();
+    expect(pageResponse, 'the homepage should return a response').not.toBeNull();
     expect(pageResponse!.ok(), `homepage returned HTTP ${pageResponse!.status()}`).toBe(true);
     await expect(page.locator('body')).toBeAttached();
   });

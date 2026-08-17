@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.1 — 2026-08-17
+
+### Changed
+
+- Clearer assertion message when the homepage returns no response.
+
 ## v1.0.0 — 2026-08-17
 
 Initial release. Extracted from the hand-copied `tests/e2e/base.spec.ts` and
