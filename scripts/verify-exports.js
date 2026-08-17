@@ -50,6 +50,10 @@ const ENTRY_POINTS = [
     expectedExports: ['testThemeAssetsLoad', 'ABOVO_BASIS_THEME_ASSETS'],
   },
   {
+    specifier: `${PACKAGE_NAME}/summary-reporter`,
+    expectedExports: ['default', 'SummaryReporter'],
+  },
+  {
     specifier: `${PACKAGE_NAME}/package.json`,
     expectedExports: ['version'],
   },

@@ -68,8 +68,58 @@ import { expect, test } from '@abovomaxlead/playwright-am-e2e';
 | `@abovomaxlead/playwright-am-e2e/config` | `defineE2EConfig()` |
 | `@abovomaxlead/playwright-am-e2e/global` | `testHomepageLoads()` — platform-agnostic |
 | `@abovomaxlead/playwright-am-e2e/abovo-basis` | `testThemeAssetsLoad()`, `ABOVO_BASIS_THEME_ASSETS` |
+| `@abovomaxlead/playwright-am-e2e/summary-reporter` | `SummaryReporter` — wired in by `defineE2EConfig()` automatically; only needed as a specifier because Playwright resolves reporters by module path |
 
 Anything not listed is internal and may change in a patch release.
+
+## Run directories
+
+Every run gets its own directory: `test-results/<runId>/`, where `runId` is
+`YYYYMMDD-HHMMSS` (UTC) — lexicographic sort equals chronological sort. Layout:
+
+```
+test-results/
+  20260817-104213/
+    artifacts/       <- Playwright's outputDir (traces, videos, per-test dirs)
+    html-report/     <- HTML reporter (a sibling of artifacts/, not nested in
+                         it — Playwright refuses an HTML report folder inside
+                         outputDir)
+    screenshots/      <- the screenshot fixture's relative-path target
+    results.json      <- Playwright's JSON reporter output
+    summary.json       <- compact machine-readable summary (see below)
+  20260817-102960/
+  ...
+```
+
+`bin/e2e` (in dev-infra) generates the run id and passes it as `E2E_RUN_ID`.
+For standalone use (`npx playwright test` without the wrapper), `defineE2EConfig()`
+generates one itself and writes it into `process.env` at config load, in the
+main process, before Playwright forks any workers — every worker inherits it,
+so a single run never scatters across several directories. See
+`src/internal/run-id.ts` for the reasoning and how it was verified against
+2+ workers.
+
+**Retention.** Old run directories are pruned automatically on every run,
+keeping the newest `E2E_KEEP_RUNS` (default **3**) by name — not by age. Only
+direct children of `test-results/` whose name matches the run-id pattern
+exactly are ever considered, symlinks are never followed, and the current
+run is never deleted. See `src/internal/retention.ts`.
+
+**`summary.json` contents:** pass/fail/skip counts, total duration in
+milliseconds, the base URL, the environment tag, the run's start timestamp,
+and the Playwright version.
+
+**Screenshot sandbox.** `page.screenshot({ path })` (via this package's `test`
+fixture) is sandboxed into the run directory:
+
+- a **relative** path lands in `<run>/screenshots/<path>`
+- a path with a **leading slash** is anchored at the run directory's root:
+  `/sub/b.jpg` -> `<run>/sub/b.jpg`
+- a path that would escape the run directory (e.g. via `..`) throws, rather
+  than writing outside it
+
+This is a **behaviour change from 1.0.x**, where an absolute path was left
+alone and written wherever it pointed — see the CHANGELOG.
 
 ## Options
 

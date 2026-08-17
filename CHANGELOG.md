@@ -1,5 +1,41 @@
 # Changelog
 
+## v1.1.0 — 2026-08-17
+
+### Added
+
+- Per-run result directories: `test-results/<runId>/` (`runId` =
+  `YYYYMMDD-HHMMSS`, from `E2E_RUN_ID` or a generated fallback for standalone
+  use). Each run directory contains `artifacts/` (Playwright's `outputDir`),
+  `html-report/` (a sibling, not nested — Playwright refuses an HTML report
+  folder inside `outputDir`), `screenshots/`, `results.json` (Playwright's
+  JSON reporter), and `summary.json` (see below).
+- Automatic retention: old run directories are pruned on every run, keeping
+  the newest `E2E_KEEP_RUNS` (default **3**) by name. Only direct children of
+  `test-results/` whose name matches the run-id pattern are ever considered;
+  symlinks are never followed; the current run is never deleted.
+- `@abovomaxlead/playwright-am-e2e/summary-reporter` — a new entry point
+  exporting `SummaryReporter`, a Playwright `Reporter` that writes a compact
+  `summary.json`: pass/fail/skip counts, total duration in ms, the base URL,
+  the environment tag, the run's start timestamp, and the Playwright version.
+  `defineE2EConfig()` wires it in automatically.
+
+### Changed
+
+- **Behaviour change — screenshot paths are now sandboxed.** `page.screenshot({
+  path })` (via this package's `test` fixture) now resolves against the run
+  directory instead of the old `<outputDir>/screenshots/`: a relative path
+  still lands in `<run>/screenshots/<path>`, but a path with a **leading
+  slash is now anchored at the run directory's root** (`/sub/b.jpg` ->
+  `<run>/sub/b.jpg`) instead of being left alone as an absolute path. A `..`
+  escape attempt now throws instead of writing outside the run directory.
+  This is a deliberate minor, not a major: every consumer of this package is
+  in-house, none uses absolute screenshot paths today, and a major bump would
+  force every project to move its `#semver:^1.0.0` pin — exactly the
+  per-project chore this run-directory design exists to remove.
+
+Full design notes: `docs/run-directories.md`.
+
 ## v1.0.1 — 2026-08-17
 
 ### Changed
