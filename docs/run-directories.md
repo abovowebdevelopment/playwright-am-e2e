@@ -70,6 +70,17 @@ not worth the disk). Pruning happens in `src/internal/retention.ts`'s
 config module, is guaranteed to run exactly once in the main process, before
 any worker starts, never once per worker.
 
+The run being started counts against `E2E_KEEP_RUNS` even though its own
+directory does not exist yet at prune time: `globalSetup` runs before the
+reporters and `outputDir` create `test-results/<runId>/`, so `pruneOldRuns()`
+adds `currentRunId` to the list it budgets whenever the directory listing does
+not already contain it. Without that, the budget is spent entirely on previous
+runs and the current one then adds itself on top, settling at
+`E2E_KEEP_RUNS + 1` directories after every run instead of `E2E_KEEP_RUNS`.
+The regression test in `tests/retention.spec.ts` reproduces that real ordering
+by leaving the current run's directory off disk — the other retention tests
+pre-create it, which is exactly why they missed the off-by-one.
+
 Safety guardrails (non-negotiable, and covered by tests that fail when
 deliberately broken — see `tests/retention.spec.ts`):
 

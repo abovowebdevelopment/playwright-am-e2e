@@ -48,6 +48,25 @@ test('keeps exactly the newest N by name and deletes the rest', () => {
   });
 });
 
+test('counts the current run against the budget when its directory does not exist yet', () => {
+  withScratchDir((dir) => {
+    // The real ordering: globalSetup prunes before Playwright's reporters and
+    // outputDir create test-results/<currentRunId>/, so only the previous runs
+    // are on disk. The current run still has to fit inside keepRuns.
+    const previousRuns = RUN_IDS.slice(0, 4);
+    makeRunDirs(dir, previousRuns);
+    const currentRunId = '20260106-000000';
+
+    const removed = pruneOldRuns(dir, currentRunId, 3);
+
+    expect(removed).toBe(2);
+    const remaining = fs.readdirSync(dir).sort();
+    expect(remaining).toEqual(previousRuns.slice(-2));
+    // Two survivors plus the run about to be written = keepRuns, not keepRuns + 1.
+    expect(remaining.length + 1).toBe(3);
+  });
+});
+
 test('default keep count (no explicit N) matches DEFAULT_KEEP_RUNS via the globalSetup entry point', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pw-am-e2e-retention-'));
   try {

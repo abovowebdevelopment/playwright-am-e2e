@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.1.2 — 2026-08-17
+
+### Fixed
+
+- Retention kept `E2E_KEEP_RUNS + 1` run directories instead of
+  `E2E_KEEP_RUNS`. `pruneOldRuns()` runs as Playwright's `globalSetup`, before
+  the reporters and `outputDir` create `test-results/<runId>/`, so the run
+  being started was invisible to the directory listing: the whole budget went
+  to previous runs, and the current run then added itself on top. With the
+  default of 3, every run ended with 4 directories on disk — while correctly
+  reporting that it had pruned. `pruneOldRuns()` now counts `currentRunId`
+  against the budget when the listing does not already contain it; behaviour
+  is unchanged when the directory does exist. Every safety guardrail is
+  untouched — direct children only, run-id names only, never a symlink, never
+  the current run.
+
+  The existing retention tests all pre-created the current run's directory,
+  which is why they passed throughout; the new regression test reproduces the
+  real ordering by leaving it off disk.
+
 ## v1.1.1 — 2026-08-17
 
 ### Changed

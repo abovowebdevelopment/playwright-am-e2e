@@ -36,9 +36,18 @@ export function pruneOldRuns(testResultsDir: string, currentRunId: string, keepR
     .map((entry) => entry.name)
     .sort();
 
+  // The current run counts against the budget even though its directory does
+  // not exist yet: this runs as Playwright's globalSetup, before the reporters
+  // and outputDir create `test-results/<currentRunId>/`. Without counting it,
+  // the budget is spent entirely on previous runs and the current one then
+  // adds itself on top, leaving `keepRuns + 1` directories after every run.
+  const budgeted = runDirNames.includes(currentRunId)
+    ? runDirNames
+    : [...runDirNames, currentRunId].sort();
+
   const keepCount = Math.max(1, keepRuns);
-  const toDelete = runDirNames
-    .slice(0, Math.max(0, runDirNames.length - keepCount))
+  const toDelete = budgeted
+    .slice(0, Math.max(0, budgeted.length - keepCount))
     .filter((name) => name !== currentRunId);
 
   for (const name of toDelete) {
