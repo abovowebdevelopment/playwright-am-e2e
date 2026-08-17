@@ -1,0 +1,6 @@
+# Intentionally empty of rules.
+#
+# npm falls back to .gitignore when this file is absent, which would drop the
+# built dist/ from the package tarball and break every consumer. The "files"
+# field in package.json is the whitelist that decides what ships; this file
+# only needs to exist so .gitignore is not consulted.
