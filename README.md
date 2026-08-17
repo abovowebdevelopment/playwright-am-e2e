@@ -146,6 +146,14 @@ SemVer is the contract every site depends on:
 A bad tag reaches every site on its next `e2e` run, so:
 
 1. `pw env E2E_BASE_URL=<a real abovo-basis dev site> npm test` — must pass.
-2. `pw npm pack --dry-run` — must list `dist/`, must not list `src/`.
-3. Bump `version` in `package.json`, add a `CHANGELOG.md` entry, commit.
-4. `git tag vX.Y.Z && git push origin main --tags`.
+2. `pw npm run test:registration` — must list the base tests.
+3. `pw npm run verify:exports` — must pass. None of the other gates resolve a
+   specifier the way a consuming project's `node_modules` install does, so
+   this is the only thing standing between a rename in `src/` and every site
+   failing at collection with `ERR_PACKAGE_PATH_NOT_EXPORTED`.
+4. `pw npm run typecheck` and `pw npm run typecheck:tests` — must both pass.
+5. `pw npm pack --dry-run` — must list `dist/`, must not list `src/`.
+6. Bump `version` in `package.json`, add a `CHANGELOG.md` entry, run
+   `pw npm install --package-lock-only` so the lockfile's own version field
+   stays in sync, commit.
+7. `git tag vX.Y.Z && git push origin main --tags`.

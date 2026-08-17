@@ -35,8 +35,10 @@
     "build": "tsc",
     "prepare": "tsc",
     "typecheck": "tsc --noEmit",
+    "typecheck:tests": "npm run build && tsc --noEmit -p tsconfig.tests.json",
     "test": "npm run build && playwright test --config tests/playwright.config.ts",
-    "test:registration": "npm run build && playwright test --config tests/registration.config.ts --list"
+    "test:registration": "npm run build && playwright test --config tests/registration.config.ts --list",
+    "verify:exports": "node scripts/verify-exports.js"
   },
   "peerDependencies": {
     "@playwright/test": ">=1.50.0 <2"
