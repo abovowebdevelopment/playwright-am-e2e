@@ -70,6 +70,13 @@ export class SummaryReporter implements Reporter {
     const outputFile = this.resolveOutputFile();
     fs.mkdirSync(path.dirname(outputFile), { recursive: true });
     fs.writeFileSync(outputFile, `${JSON.stringify(summary, null, 2)}\n`);
+
+    // Last line of the run: state where the results are, and nothing else.
+    // Playwright's own "To open last HTML report run: npx playwright
+    // show-report …" hint is wrong in this environment — it prints a path
+    // relative to the container's cwd and tells you to run npx on a host that
+    // has no Playwright. bin/e2e suppresses it by not allocating a TTY.
+    process.stdout.write(`\nTest results: ${path.dirname(outputFile)}\n`);
   }
 
   private resolveOutputFile(): string {

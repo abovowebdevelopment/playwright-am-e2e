@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.1 — 2026-08-17
+
+### Changed
+
+- A run now ends with a single plain line naming the results directory:
+  `Test results: <path>`. It stands in for Playwright's own "To open last HTML
+  report run: npx playwright show-report …" hint, which is wrong here on both
+  counts — the path is relative to the container's working directory, and the
+  host has no Playwright to run it with. `bin/e2e` suppresses that hint by not
+  allocating a TTY (Playwright gates it on `process.stdin.isTTY`) while setting
+  `FORCE_COLOR=1` so coloured output survives.
+
+  The HTML report is a self-contained `index.html` with its data inlined, so it
+  opens straight from the filesystem — no server, no `show-report`.
+
 ## v1.1.0 — 2026-08-17
 
 ### Added
