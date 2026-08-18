@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.0 — 2026-08-18
+
+### Changed
+
+- The abovo-basis suite moved to
+  `@abovomaxlead/playwright-am-e2e/wordpress/abovo-basis`, so platform-specific
+  suites group by platform instead of sitting flat next to the
+  platform-agnostic ones. The old `/abovo-basis` specifier is gone rather than
+  aliased: only dev-environment projects consume this package, and both were
+  updated with the move. A project still importing `/abovo-basis` fails at
+  collection with `ERR_PACKAGE_PATH_NOT_EXPORTED` on its next `e2e` run — fix
+  the import in `tests/e2e/base.spec.ts`.
+
 ## v1.1.2 — 2026-08-17
 
 ### Fixed

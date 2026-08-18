@@ -1,6 +1,6 @@
-import { expect, test } from '../index';
-import { matchesAssetUrl } from '../internal/asset-url';
-import { loadPage } from '../internal/page-load';
+import { expect, test } from '../../index';
+import { matchesAssetUrl } from '../../internal/asset-url';
+import { loadPage } from '../../internal/page-load';
 
 export type ThemeAsset = {
   /** Human-readable name used in the test title, e.g. 'theme stylesheet'. */

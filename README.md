@@ -20,8 +20,8 @@ In a project's `tests/e2e/package.json`:
   "dependencies": {
     "@abovomaxlead/playwright-am-e2e": "git+https://github.com/abovowebdevelopment/playwright-am-e2e#semver:^1.0.0"
   },
-  "devDependencies": {
-    "@playwright/test": "1.50.0"
+  "allowScripts": {
+    "github:abovowebdevelopment/playwright-am-e2e": true
   }
 }
 ```
@@ -39,7 +39,7 @@ a two-part tag such as `1.0` matches nothing and silently falls back to `main`.
 
 ```ts
 import { testHomepageLoads } from '@abovomaxlead/playwright-am-e2e/global';
-import { testThemeAssetsLoad } from '@abovomaxlead/playwright-am-e2e/abovo-basis';
+import { testThemeAssetsLoad } from '@abovomaxlead/playwright-am-e2e/wordpress/abovo-basis';
 
 testHomepageLoads();
 testThemeAssetsLoad();
@@ -67,7 +67,7 @@ import { expect, test } from '@abovomaxlead/playwright-am-e2e';
 | `@abovomaxlead/playwright-am-e2e` | `test`, `expect`, and the `Page`, `Response`, `Locator`, `BrowserContext` types |
 | `@abovomaxlead/playwright-am-e2e/config` | `defineE2EConfig()` |
 | `@abovomaxlead/playwright-am-e2e/global` | `testHomepageLoads()` — platform-agnostic |
-| `@abovomaxlead/playwright-am-e2e/abovo-basis` | `testThemeAssetsLoad()`, `ABOVO_BASIS_THEME_ASSETS` |
+| `@abovomaxlead/playwright-am-e2e/wordpress/abovo-basis` | `testThemeAssetsLoad()`, `ABOVO_BASIS_THEME_ASSETS` |
 | `@abovomaxlead/playwright-am-e2e/summary-reporter` | `SummaryReporter` — wired in by `defineE2EConfig()` automatically; only needed as a specifier because Playwright resolves reporters by module path |
 
 Anything not listed is internal and may change in a patch release.

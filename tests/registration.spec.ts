@@ -1,4 +1,4 @@
-import { testThemeAssetsLoad } from '../dist/suites/abovo-basis';
+import { testThemeAssetsLoad } from '../dist/suites/wordpress/abovo-basis';
 
 // Listed, never executed — see registration.config.ts.
 testThemeAssetsLoad({

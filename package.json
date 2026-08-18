@@ -1,6 +1,6 @@
 {
   "name": "@abovomaxlead/playwright-am-e2e",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Shared Playwright end-to-end base tests for Abovo websites.",
   "license": "UNLICENSED",
   "repository": {
@@ -22,9 +22,9 @@
       "types": "./dist/suites/global.d.ts",
       "default": "./dist/suites/global.js"
     },
-    "./abovo-basis": {
-      "types": "./dist/suites/abovo-basis.d.ts",
-      "default": "./dist/suites/abovo-basis.js"
+    "./wordpress/abovo-basis": {
+      "types": "./dist/suites/wordpress/abovo-basis.d.ts",
+      "default": "./dist/suites/wordpress/abovo-basis.js"
     },
     "./summary-reporter": {
       "types": "./dist/summary-reporter.d.ts",

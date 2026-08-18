@@ -1,4 +1,4 @@
-import { ABOVO_BASIS_THEME_ASSETS, testThemeAssetsLoad } from '../dist/suites/abovo-basis';
+import { ABOVO_BASIS_THEME_ASSETS, testThemeAssetsLoad } from '../dist/suites/wordpress/abovo-basis';
 import { expect, test } from '../dist/index';
 
 // `test` comes from the package, not from '@playwright/test': the registrar

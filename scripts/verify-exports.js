@@ -46,7 +46,7 @@ const ENTRY_POINTS = [
     expectedExports: ['testHomepageLoads'],
   },
   {
-    specifier: `${PACKAGE_NAME}/abovo-basis`,
+    specifier: `${PACKAGE_NAME}/wordpress/abovo-basis`,
     expectedExports: ['testThemeAssetsLoad', 'ABOVO_BASIS_THEME_ASSETS'],
   },
   {
