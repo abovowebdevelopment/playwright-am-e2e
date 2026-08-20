@@ -42,8 +42,12 @@ test('baseURL comes from E2E_BASE_URL', () => {
   });
 });
 
-test('testDir defaults to the config directory', () => {
-  expect(defineE2EConfig().testDir).toBe('.');
+test('testDir defaults to specs/', () => {
+  expect(defineE2EConfig().testDir).toBe('specs');
+});
+
+test('a caller can still override testDir', () => {
+  expect(defineE2EConfig({ testDir: 'e2e' }).testDir).toBe('e2e');
 });
 
 test('top-level overrides win', () => {

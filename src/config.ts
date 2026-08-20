@@ -81,7 +81,11 @@ export function defineE2EConfig(overrides: PlaywrightTestConfig = {}): Playwrigh
   announceTargets(projects);
 
   return defineConfig({
-    testDir: '.',
+    // Specs live in specs/, so the directory listing keeps config
+    // (package.json, playwright.config.ts, e2e.targets.json) apart from the
+    // tests instead of interleaving them alphabetically. `bin/e2e` checks the
+    // directory exists and explains the move if it does not.
+    testDir: 'specs',
     ...rest,
     projects,
     globalSetup: globalSetup ?? require.resolve('./internal/retention'),
