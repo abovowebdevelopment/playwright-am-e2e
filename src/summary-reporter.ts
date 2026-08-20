@@ -26,6 +26,19 @@ type Counts = {
 export class SummaryReporter implements Reporter {
   private readonly outputFile: string;
   private config?: FullConfig;
+  private projects: Array<{ name: string; baseURL: string | null }> = [];
+
+  /**
+   * The run's targets, or `null` when the run had a single unnamed project —
+   * the shape a project without a targets file produces, where `baseURL`
+   * above already says everything.
+   */
+  private resolveTargets(): Array<{ name: string; baseURL: string | null }> | null {
+    if (this.projects.length <= 1 && (this.projects[0]?.name ?? '') === '') {
+      return null;
+    }
+    return this.projects;
+  }
   private startedAt = 0;
   private counts: Counts = { passed: 0, failed: 0, skipped: 0, interrupted: 0 };
 
@@ -35,6 +48,11 @@ export class SummaryReporter implements Reporter {
 
   onBegin(config: FullConfig): void {
     this.config = config;
+    // Defensive: a hand-built FullConfig (the package's own tests) may omit it.
+    this.projects = (config.projects ?? []).map((project) => ({
+      name: project.name,
+      baseURL: (project.use as { baseURL?: string } | undefined)?.baseURL ?? null,
+    }));
     this.startedAt = Date.now();
   }
 
@@ -62,6 +80,11 @@ export class SummaryReporter implements Reporter {
       counts: { ...this.counts },
       durationMs: Date.now() - this.startedAt,
       baseURL: process.env.E2E_BASE_URL ?? null,
+      // A run can cover several sites (see the targets file), and then a single
+      // baseURL above describes only the one the runner resolved. `targets`
+      // names what actually ran; it is null for a plain single-target run so
+      // existing consumers see no change in shape.
+      targets: this.resolveTargets(),
       environment: process.env.AM_DEV_INFRA_ENV ?? null,
       startedAt: new Date(this.startedAt).toISOString(),
       playwrightVersion: readPlaywrightVersion(),
