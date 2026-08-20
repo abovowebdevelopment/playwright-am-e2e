@@ -1,6 +1,6 @@
 {
   "name": "@abovomaxlead/playwright-am-e2e",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Shared Playwright end-to-end base tests for Abovo websites.",
   "license": "UNLICENSED",
   "repository": {
